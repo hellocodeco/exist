@@ -77,7 +77,7 @@ class Attribute(models.Model):
     correlation_priority = models.IntegerField(default=0,
                                                help_text="Higher = everything else follows this, eg. the weather. You can't control the weather.")
     
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     class Meta:
@@ -89,7 +89,7 @@ class AttributeGroup(models.Model):
     label = models.CharField(max_length=40)
     priority = models.IntegerField(default=2)
     
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     class Meta:
@@ -193,7 +193,7 @@ class UserAttribute(models.Model):
     active = models.BooleanField(default=True,verbose_name='Enabled')
     private = models.BooleanField(default=False,verbose_name='Private')
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s for %s" % (self.attribute.label, self.user.username)
 
     @property
@@ -241,7 +241,62 @@ class UserAttribute(models.Model):
         return self._available_services
     
     class Meta:
-        ordering = ['service__type__order','attribute__group__priority','attribute__priority','attribute__name']
+        ordering = ['attribute__group__priority','attribute__priority','attribute__name']
+
+
+class UserAttributeData(models.Model):
+    user_attribute = models.ForeignKey('UserAttribute',related_name='data')
+    created = models.DateTimeField(auto_now_add=True)
+    time = models.DateField()
+    value_type = models.SmallIntegerField(default=0)
+    int_value = models.IntegerField(null=True, blank=True)
+    string_value = models.CharField(null=True,max_length=250, blank=True)
+    float_value = models.DecimalField(max_digits=16,decimal_places=4, null=True, blank=True)
+    
+    @property
+    def value(self):
+        """
+        Return the appropriate value type.
+        """
+        if self.value_type == 0:
+            return self.int_value
+        if self.value_type == 1:
+            return self.float_value
+        if self.value_type == 2:
+            return self.string_value
+        if self.value_type == 3:
+            return self.int_value
+        if self.value_type == 4:
+            return self.int_value
+        if self.value_type == 5:
+            return self.float_value
+        if self.value_type == 6:
+            return self.int_value
+        
+    def set_value(self,value):
+        if self.value_type == 0:
+            self.int_value = value
+        if self.value_type == 1:
+            self.float_value = value
+        if self.value_type == 2:
+            self.string_value = value
+        if self.value_type == 3:
+            self.int_value = value
+        if self.value_type == 4:
+            self.int_value = value
+        if self.value_type == 5:
+            self.float_value = value
+        if self.value_type == 6:
+            self.int_value = value
+
+    def __str__(self):
+        return "%s: %s: %s" % (self.user_attribute.user.username, self.user_attribute.attribute.label, unicode(self.value))
+
+    class Meta:
+        ordering = ['-time']
+        unique_together=('user_attribute','time')
+
+
 
 
 class Service(models.Model):
@@ -257,11 +312,11 @@ class Service(models.Model):
     settings = models.BooleanField(default=False)
     external = models.BooleanField(default=False)
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name
     
     class Meta:
-        ordering = ['type__order','name']
+        ordering = ['name']
     
     @property
     def types(self):
@@ -288,12 +343,12 @@ class Profile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     enabled = models.BooleanField(default=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s on %s" % (self.user.username, self.service.name)
 
     class Meta:
         unique_together = (("user","service"),)
-        ordering = ['service__type__order','service__name']
+        ordering = ['service__name']
         
     @property
     def concrete_model(self):
@@ -321,12 +376,15 @@ class Event(models.Model):
     attribute = models.ForeignKey('Attribute',related_name='events')
     created = models.DateTimeField(auto_now_add=True)
     time = models.DateTimeField()
-    int_value = models.IntegerField(null=True,blank=True,)
-    float_value = models.DecimalField(null=True,blank=True,max_digits=16,decimal_places=2)
-    string_value = models.CharField(null=True,blank=True,max_length=255)    
+    value = models.DecimalField(null=True,blank=True,max_digits=16,decimal_places=4)
     value_type = models.SmallIntegerField()
     meta = JSONField(null=True, default={})
     
+    def __str__(self):
+        return "[%s] %s: %s" % (self.created.strftime("%Y-%m-%d %H:%M:%S"), self.user.username, self.attribute.name)
+
+    class Meta:
+        unique_together = (("user","attribute","time"),)
 
 
 class UserLogManager(models.Manager):
@@ -412,8 +470,8 @@ class UserLog(models.Model):
     args =          models.TextField(null=True,blank=True)
     objects =       UserLogManager()
     
-    def __unicode__(self):
-        return "%s: %s %s" % (self.user.username, self.page, self.action)
+    def __str__(self):
+        return "%s: %s.%s" % (self.user.username, self.page, self.action)
 
     class Meta:
         ordering = ['-created']

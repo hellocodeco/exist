@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
-import django_pgjsonb.fields
+import core.json_field
 import django.contrib.auth.models
 import django.utils.timezone
 import decimal
@@ -96,7 +96,7 @@ class Migration(migrations.Migration):
                 ('float_value', models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)),
                 ('string_value', models.CharField(max_length=255, blank=True, null=True)),
                 ('value_type', models.SmallIntegerField()),
-                ('meta', django_pgjsonb.fields.JSONField(encode_kwargs={'cls': django.core.serializers.json.DjangoJSONEncoder}, default={}, null=True, decode_kwargs={'parse_float': decimal.Decimal})),
+                ('meta', core.json_field.JSONField(encode_kwargs={'cls': django.core.serializers.json.DjangoJSONEncoder}, default={}, null=True, decode_kwargs={'parse_float': decimal.Decimal})),
             ],
         ),
         migrations.CreateModel(
