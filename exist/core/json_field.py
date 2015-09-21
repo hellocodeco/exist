@@ -17,7 +17,7 @@ register_json(oid=3802, array_oid=3807)
 # the json object... which if we wanted to do it on a per-field
 # basis, we'd need to not have run that line.
 
-DatabaseIntrospection.data_types_reverse[3802]="django_pgjsonb.JSONField"
+DatabaseIntrospection.data_types_reverse[3802]="core.json_field.JSONField"
 
 
 class JSONField(models.Field):
@@ -79,7 +79,7 @@ class JSONField(models.Field):
 
     def deconstruct(self):
         name, path, args, kwargs = super(JSONField, self).deconstruct()
-        path = 'django_pgjsonb.fields.JSONField'
+        path = 'core.json_field.JSONField'
         kwargs.update(
             decode_kwargs=self.decode_kwargs,
             encode_kwargs=self.encode_kwargs
