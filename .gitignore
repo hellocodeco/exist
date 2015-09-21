@@ -2,4 +2,5 @@ pe_env/
 *.pyc
 *.pyo
 local_settings.py
+*.log
 
