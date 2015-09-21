@@ -29,4 +29,4 @@ Still very much in alpha. Components from the current live version of Exist will
 
 ## Try the real thing
 
-If you're interested in using the full version of Exist you can sign up for an account at [https://exist.io](exist.io).
+If you're interested in using the full version of Exist you can sign up for an account at [exist.io](https://exist.io).
