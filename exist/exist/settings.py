@@ -3,6 +3,10 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+ADMINS = ()
+
+MANAGERS = ADMINS
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -160,5 +164,8 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     )
 }
+
+STATIC_ROOT = ''
+
 
 from .local_settings import *
