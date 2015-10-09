@@ -20,6 +20,7 @@ Still very much in alpha. Components from the current live version of Exist will
 
 * Set up a new Postgres database
 * Add your database config to a file called `local_settings.py` in the `exist` directory
+* Add a new `SECRET_KEY` random string to `local_settings.py`
 * Create a new virtual environment, clone Exist into it, and run `pip install -r requirements.txt`.
 * Run `python manage.py migrate`
 
