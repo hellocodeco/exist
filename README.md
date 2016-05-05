@@ -8,6 +8,8 @@
 
 We're interested in making the core of Exist (the back-end data handling, but not the front-end) open-source. We're also conveniently experimenting with a new version that can handle arbitrary metadata and events rather than tracking data on a per-day granularity. So, why not build the new version in public?
 
+For internal reasons this hasn't really gone ahead.
+
 ## Requirements/components
 
 Built with Python 3.4, Django 1.8, SciPy, [Pulsar](https://github.com/quantmind/pulsar/), Django Rest Framework, and Postgres.
